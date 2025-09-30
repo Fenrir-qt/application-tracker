@@ -89,30 +89,13 @@ tr:hover {
 
 }
 
-
 .dash-card-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   gap: 2rem;
 }
 
-.link-cards {
-  background-color: rgb(231, 242, 255);
-  padding: 2rem;
-  border-radius: 20px;
-  max-width: 400px;
-  width: 100%;
-}
-
-.application-sent-cards{
-  background-color: rgb(231, 242, 255);
-  padding: 2rem;
-  border-radius: 20px;
-  max-width: 400px;
-  width: 100%;
-}
-
-.job-offers-cards{
+.link-cards, .application-sent-cards, .job-offers-cards {
   background-color: rgb(231, 242, 255);
   padding: 2rem;
   border-radius: 20px;
@@ -172,6 +155,11 @@ h2 {
   display: none;
 }
 
+.card-title.mobileHeading {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
 #statusCell span {
   display: flex;
   align-items: center;
@@ -226,8 +214,6 @@ h2 {
   nav {
     display: none;
   }
-  
-  .table-head
 
   .card-container {
     display: block;
@@ -243,11 +229,12 @@ h2 {
   .dash-card-container {
     gap: 1rem;
   }
+  
   .card-head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; 
     margin-bottom: 10px;
   }
 
@@ -275,10 +262,21 @@ h2 {
   }
 }
 
+@media (max-width: 768px){
+  .dash-card-container {
+    flex-direction: column;
+  }
+
+  .link-cards, .application-sent-cards, .job-offers-cards {
+    max-width: none;
+  }
+}
+
 @media (max-width: 950px) {
 
   .dash-card-container {
     padding: 1rem 0;
+    gap: 0.75rem;
   }
 
   table {
@@ -287,6 +285,21 @@ h2 {
 
   main {
     padding: 0 1rem;
+  }
+
+  .mobileBtnGrp {
+    display: flex;
+    gap: 5px !important;
+  }
+
+  .mobileBtnGrp button {
+    font-size: small;
+  }
+
+  .card-title.mobileHeading {
+    font-size: medium;
+    font-weight: bold;
+    margin-bottom: 0%;
   }
 
   .card-container {
@@ -322,7 +335,7 @@ h2 {
   }
 
   .table-head {
-    padding: 2rem 0 0 0;
+    padding: 2rem 1rem 0;
   }
 
   #mobileStatusCell {

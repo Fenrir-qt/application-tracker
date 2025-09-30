@@ -44,3 +44,9 @@ window.setTimeout(function() {
 });
 
 
+const swiper = new Swiper('.swiping-card-container', {
+  slidesPerView: 1,
+  spaceBetwween: 50,
+  direction: 'horizontal',
+  loop: true
+})
