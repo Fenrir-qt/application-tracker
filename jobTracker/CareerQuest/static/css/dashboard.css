@@ -1,0 +1,355 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+* {
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  padding: 2rem 4rem;
+}
+
+header {
+  background-color: rgb(0, 26, 139);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+  width: 100%;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.table-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.table thead th {
+  padding: 1rem 3rem;
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  color: white;
+  transition: 0.2s ease;
+}
+
+.logoutBtn:hover{
+  color: red;
+}
+
+.alert {
+  margin-top: 1rem;
+}
+.table-head #addBtn {
+  font-size: small;
+  padding: 0.5rem 1rem;
+  height: 0%;
+  border: none;
+  border-radius: 10px;
+}
+
+.table-head h4 {
+  margin: 0;
+}
+
+.table {
+  text-align: center;
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+.table tr td {
+  padding: 1rem 3rem;
+  min-height: auto;
+  transition: 0.2s ease;
+}
+
+tr:hover {
+  cursor: pointer;
+}
+.table tr:hover td {
+  background-color: azure;
+
+}
+
+
+.dash-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.link-cards {
+  background-color: rgb(231, 242, 255);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.application-sent-cards{
+  background-color: rgb(231, 242, 255);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.job-offers-cards{
+  background-color: rgb(231, 242, 255);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.sent-number p {
+  text-align: center; 
+  font-size: 60px;
+  margin-top: 1.25rem;
+}
+
+.quickLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-size: large;
+  margin-top: 20px;
+}
+
+.card-title.quickLinksTitle {
+  margin-bottom: 10px !important;
+}
+
+.quickLinks a{
+  text-decoration: none;
+  color: rgb(78, 78, 78);
+}
+
+
+.quickLinks a:hover{
+  text-decoration: underline;
+}
+
+h2 {
+  color: white !important;
+  padding: 1.5rem;
+  margin-bottom: 0 !important;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.statusDot {
+  padding: 0;
+  margin: 0;
+}
+
+.card-container {
+  display: none;
+}
+
+.card.mb-3{
+  display: none;
+}
+
+#statusCell span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#companyCell span {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#jobCell span {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#descCell span {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#dateCell span {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.statusDot {
+   font-size: xx-large;
+}
+
+.modal-header {
+  background-color: rgb(18, 59, 192);
+}
+
+.modal-header h5 {
+  color: aliceblue;
+}
+
+.menuBtn {
+   display: none;
+}
+
+@media (max-width: 450px) {
+
+  main {
+    padding: 2rem 2rem;
+  }
+  nav {
+    display: none;
+  }
+  
+  .table-head
+
+  .card-container {
+    display: block;
+    padding: 1rem;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dash-card-container {
+    gap: 1rem;
+  }
+  .card-head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .table-container{
+   padding: 0% !important;
+  }
+
+  .button-group {
+    gap: 10px;
+  }
+
+  table {
+    display: none;
+  }
+
+  .menuBtn{
+   display: block;
+   background: none;
+   color: white;
+   border: none;
+  }
+
+  .user-greeting {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 950px) {
+
+  .dash-card-container {
+    padding: 1rem 0;
+  }
+
+  table {
+    display: none;
+  }
+
+  main {
+    padding: 0 1rem;
+  }
+
+  .card-container {
+    display: block;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 300px;
+    height: 100%;
+  }
+
+  .card.mb-3{
+    display: block;
+  }
+
+  .statusDot{
+    display: flex !important;
+  }
+
+  .user-greeting {
+    padding: 2rem 1rem; 
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  table {
+    display: none;
+  }
+
+  .table-container {
+    margin: 0;
+  }
+
+  .table-head {
+    padding: 2rem 0 0 0;
+  }
+
+  #mobileStatusCell {
+   display: flex;
+   align-items: center;
+  }
+
+  .card-container {
+    display: block;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 300px;
+    height: 100%;
+  }
+
+  .card.mb-3{
+    display: block;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+

@@ -1,0 +1,63 @@
+ @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+ * {
+    font-family: 'Rubik', Arial, Helvetica, sans-serif;
+ }
+
+ h2 {
+    text-align: center;
+ }
+ .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    max-width: 450px;
+    margin: 0 auto; 
+ }
+
+form {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(219, 226, 231, 0.74);
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+#forgotPass {
+   font-size: 13px;
+   width: 30%;
+}
+
+a {
+  text-decoration: none !important;
+  color: black !important;
+}
+
+a:hover {
+   text-decoration: underline !important;
+   color: blue !important;
+}
+
+
+ #identifierErr, #passwordErr {
+    display: none;
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+ }
+
+ @media (max-width: 450px){
+
+   .form-container {
+      max-width: 350px;
+   }
+
+   form {
+      padding: 1rem;
+   }
+
+   #forgotPass {
+      width: 40%;
+   }
+}

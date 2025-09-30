@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'favicon.svg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/e22f460aec.js" crossorigin="anonymous"></script>
+    <title>Dashboard | CareerQuest</title>
+</head>
+<body>
+    
+    <header>
+        <h2><i class="bi bi-file-earmark-person-fill"></i>&nbsp;CareerQuest</h2>
+        <button type="submit" class="logoutBtn" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="bi bi-box-arrow-right"></i></button>
+    </header>
+    <main>
+        <h4 class="user-greeting">Hello, {{ username }}!</h4>
+        <!-- Cards -->
+        <div class="dash-card-container">
+            <div class="cards link-cards">
+                <div class="card-body">
+                    <h4 class="card-title quickLinksTitle"><span><i class="bi bi-lightning-charge-fill"></i>&nbsp;Quick Access</span></h4>
+                    <div class="card-text quickLinks">
+                        <span><i class="fa-brands fa-square-linkedin"></i>&nbsp;<a href="https://linkedin.com" target="_blank" rel="noreferrer" >Linkedin</a></span>
+                        <span><i class="fa-solid fa-briefcase"></i>&nbsp;<a href="https://indeed.com" target="_blank" rel="noreferrer" >Indeed</a></span>
+                        <span><i class="fa-brands fa-searchengin"></i>&nbsp;<a href="https://glassdoor.com" target="_blank" rel="noreferrer" >Glassdoor</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="cards application-sent-cards">
+                <div class="card-body">
+                    <h4 class="card-title application-title"><span><i class="bi bi-send-check-fill"></i>&nbsp;Application/s Sent:</span></h4>
+                    <div class="card-text sent-number">
+                         <p class="text-black">{{ total_jobs }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="cards job-offers-cards">
+                <div class="card-body">
+                    <h4 class="card-title offer-title"><span><i class="bi bi-emoji-laughing"></i>&nbsp;Offers Received:</span></h4>
+                    <div class="card-text sent-number">
+                        <p class="text-black">{{ total_offers }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert when creating, updating, deleting records -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        <!-- Desktop View -->
+        <div class="table-container">
+            <div class="table-head">
+               <h4>Applications</h4>
+               <button class="btn btn-primary" id="addBtn" data-bs-toggle="modal" data-bs-target="#addApplicationModal">+ Add Application</button> 
+            </div>
+            
+            <table class="table table-responsive">
+                <thead>
+                    <th>Company</th>
+                    <th>Position/Title</th>
+                    <th>Description</th>
+                    <th >Status</th>
+                    <th>Date Applied</th>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr data-bs-toggle="modal" data-bs-target="#actionsModal{{ job.id }}" data>
+                        <td id="companyCell"><span><p>&nbsp;</p>{{ job.company }}</span></td>
+                        <td id="jobCell"><span><p>&nbsp;</p>{{ job.job_name }}</span></td>
+                        <td id="descCell"><span><p>&nbsp;</p>{{ job.job_desc }}</span></td>
+                        <td data-value="{{job.status}}" id="statusCell"><span><i class="bi bi-dot statusDot"></i>{{ job.status }}</span></td>
+                        <td id="dateCell"><span><p>&nbsp;</p>{{ job.application_date }}</span></td>
+                        {% empty %}
+                        <td colspan="5"><h5>No records found.</h5></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile View -->
+        {% if jobs %}
+            {% for job in jobs %}
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-head">
+                            <h5 class="card-title">{{ job.job_name }}</h5>
+                            <div class="button-group">
+                                <button class="editBtn btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#editApplicationModal{{ job.id }}">Edit</button>
+                                <button class="deleteBtn btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ job.id }}">Delete</button>
+                            </div>
+                        </div>
+                        <span>Company: {{ job.company }}</span>
+                        <span>Description: {{ job.job_desc }}</span>
+                        <span data-value={{job.status}} id="mobileStatusCell">Status: {{ job.status }}<i class="bi bi-dot statusDot"></i></span>
+                        <span>Date Applied: {{ job.application_date }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card mb-3" id="noRecordMobile">
+                <div class="card-body">
+                    <h5 class="text-center">No records found</h5>
+                </div>
+            </div>
+        {% endif %}
+        
+
+        <!-- Add Application Modal -->
+        <form action="{% url 'add_application' %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" id="addApplicationModal" tabindex="-1" role="dialog" aria-labelledby="addApplicationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="addApplicationModalLabel">Add Application</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label for="company" class="mb-1">Company:</label>
+                        {{ form.company }}
+                        <label for="jobName" class="mb-1 mt-3">Job Title:</label>
+                        {{ form.job_name }}
+                        <label for="jobDesc" class="mb-1 mt-3">Description:</label>
+                        {{ form.job_desc }}
+                        <label for="status" class="mb-1 mt-3">Status:</label>
+                        {{ form.status }}
+                        <label for="" class="mb-1 mt-3">Date Applied:</label>
+                        {{ form.application_date }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <!-- Action Dialog ( For Desktop View Only )-->
+        {% for job in jobs %}
+        <div class="modal fade" id="actionsModal{{ job.id }}" role="dialog" aria-labelledby="actionsModalLabel{{ job.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="actionsModalLabel{{ job.id }}">Actions</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>What do you want to do with this record?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#editApplicationModal{{ job.id }}">Edit</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#deleteModal{{ job.id }}">Delete</button>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <!-- Edit Application Modals -->
+        {% for job in jobs %}
+        <form action="{% url 'edit_application' job.id %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" id="editApplicationModal{{ job.id }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Edit Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="company" class="mb-1">Company:</label>
+                        {{ job.edit_form.company }}
+                        <label for="jobName" class="mb-1 mt-3">Job Title:</label>
+                        {{ job.edit_form.job_name }}
+                        <label for="jobDesc" class="mb-1 mt-3">Description:</label>
+                        {{ job.edit_form.job_desc }}
+                        <label for="status" class="mb-1 mt-3">Status:</label>
+                        {{ job.edit_form.status }}
+                        <label for="dateApplied" class="mb-1 mt-3">Date Applied:</label>
+                        {{ job.edit_form.application_date }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        {% endfor %}
+
+        <!-- Delete Confirmation -->
+        {% for job in jobs %}
+        <form action="{% url 'delete_application' job.id %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" id="deleteModal{{ job.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ job.id }}" aria-hidden="true" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="deleteModalHead modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel{{ job.id }}">Delete Application</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete the application "{{ job.job_name }}" at {{ job.company }}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        {% endfor %}
+
+        <!-- Logout Confirmation -->
+        <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="logoutModalHead modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Logout</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to logout?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        
+    </main>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+</body>
+</html>
