@@ -1,0 +1,21 @@
+/* Profile Page Styles - mobile first */
+.profile-page .avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--bs-light, #f8f9fa);
+  display: grid;
+  place-items: center;
+}
+.profile-page .avatar i {
+  font-size: 64px;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.profile-page .card {
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+@media (min-width: 768px) {
+  .profile-page .avatar { width: 112px; height: 112px; }
+}

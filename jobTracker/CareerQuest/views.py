@@ -45,7 +45,11 @@ def home(request):
     
     stats = jobs.aggregate(
         total_jobs=Count('id'),
-        total_offers=Count('id', filter=Q(status='Offered'))
+        total_offers=Count('id', filter=Q(status='Offered')),
+        total_pending=Count('id', filter=Q(status='Pending')),
+        total_noresponse=Count('id', filter=Q(status='No Response')),
+        total_accepted=Count('id', filter=Q(status='Accepted')),
+        total_rejected=Count('id', filter=Q(status='Rejected')),
     )
     
     form = addApplicationForm()
@@ -57,6 +61,10 @@ def home(request):
         'username': request.user.username,
         'total_jobs': stats['total_jobs'],
         'total_offers': stats['total_offers'],
+        'total_noresponse': stats['total_noresponse'],
+        'total_pending': stats['total_pending'],
+        'total_accepted': stats['total_accepted'],
+        'total_rejected': stats['total_rejected'],
         'jobs': jobs,
         'form': form,        
     }
@@ -83,10 +91,8 @@ def edit_application(request, id):
    
     if request.method == "POST":
         form = editApplicationForm(request.POST, instance=job)
-        
         if form.is_valid():
             if form.changed_data:
-                # Save only the changed fields correctly using the model's save()
                 instance = form.save(commit=False)
                 instance.save(update_fields=form.changed_data)
                 messages.success(request, 'Job Application Updated.')
@@ -94,7 +100,6 @@ def edit_application(request, id):
                 messages.info(request, 'No changes were made.')
         else:
             messages.error(request, 'Error updating Job Application')
-    
     return redirect('/dashboard')
 
 @login_required(login_url='/')
@@ -104,8 +109,33 @@ def delete_application(request, id):
         job.delete()
         messages.success(request, 'Job Application Deleted')
     return redirect('/dashboard')
-    
+
 @login_required(login_url='/')
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+@login_required(login_url='/')
+def profile(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        changed = False
+        if first_name is not None and first_name != request.user.first_name:
+            request.user.first_name = first_name
+            changed = True
+        if last_name is not None and last_name != request.user.last_name:
+            request.user.last_name = last_name
+            changed = True
+        if email is not None and email != request.user.email:
+            request.user.email = email
+            changed = True
+        if changed:
+            request.user.save()
+            messages.success(request, 'Profile updated successfully.')
+        else:
+            messages.info(request, 'No changes were made.')
+        return redirect('profile')
+    
+    return render(request, 'profile/profile.html')

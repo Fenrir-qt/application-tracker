@@ -11,10 +11,9 @@
 {% endblock %}
 
 {% block content %}
-    <header>
-        <h2><i class="bi bi-file-earmark-person-fill"></i>&nbsp;CareerQuest</h2>
-        <button type="submit" class="logoutBtn" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="bi bi-box-arrow-right"></i></button>
-    </header>
+
+    {% include 'includes/navbar.html' %}
+    
     <main>
         <h4 class="user-greeting">Hello, {{ username }}!</h4>
         <!-- Cards -->
@@ -54,6 +53,41 @@
             </div>
             {% endfor %}
         {% endif %}
+        <!-- Reports -->
+        <section id="reports" class="mt-3">
+            <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-pie-chart-fill"></i> Applications by Status</h5>
+                            <div class="ratio ratio-16x9">
+                                <canvas id="statusChart"
+                                  data-pending="{{ total_pending|default:0 }}"
+                                  data-accepted="{{ total_accepted|default:0 }}"
+                                  data-noresponse="{{ total_noresponse|default:0 }}"
+                                  data-offer="{{ total_offers|default:0 }}"
+                                  data-rejected="{{ total_rejected|default:0 }}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-list-check"></i> Quick Stats</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">Pending <span class="badge bg-primary rounded-pill">{{ total_pending|default:0 }}</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">Accepted <span class="badge bg-success rounded-pill">{{ total_accepted|default:0 }}</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">No Response <span class="badge bg-secondary rounded-pill">{{ total_noresponse|default:0 }}</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">Offer <span class="badge bg-warning text-dark rounded-pill">{{ total_offers|default:0 }}</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">Rejected <span class="badge bg-danger rounded-pill">{{ total_rejected|default:0 }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Desktop View -->
         <div class="table-container">
             <div class="table-head">
@@ -247,4 +281,20 @@
 {% block scripts %}
     <script src="{% static 'js/dashboard.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const statusCtx = document.getElementById('statusChart');
+        if (statusCtx) {
+            const ds = statusCtx.dataset;
+            const dataArr = [Number(ds.pending||0), Number(ds.accepted||0), Number(ds.offer||0), Number(ds.rejected||0), Number(ds.noresponse||0)];
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending','Accepted','Offer','Rejected', 'No Response'],
+                    datasets: [{ data: dataArr, backgroundColor: ['#0d6efd','#198754','#fd7e14','#dc3545', '#757575ff'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
 {% endblock %}

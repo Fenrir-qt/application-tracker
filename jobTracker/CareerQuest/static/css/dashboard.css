@@ -24,6 +24,22 @@ header {
   width: 100%;
 }
 
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  transition: 0.2s ease;
+}
+
+.nav-links a:hover{
+  color: rgb(54, 141, 255);
+  text-decoration: underline;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
 .table-container {
   display: flex;
   flex-direction: column;

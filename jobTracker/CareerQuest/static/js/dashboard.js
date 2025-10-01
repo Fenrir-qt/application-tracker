@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const colorClassMap = {
       Rejected: "text-danger",
       Pending: "text-warning",
+      Offered: "text-info",
       Accepted: "text-success",
     };
 
@@ -43,10 +44,3 @@ window.setTimeout(function() {
 
 });
 
-
-const swiper = new Swiper('.swiping-card-container', {
-  slidesPerView: 1,
-  spaceBetwween: 50,
-  direction: 'horizontal',
-  loop: true
-})
