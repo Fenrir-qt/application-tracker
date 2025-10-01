@@ -1,11 +1,25 @@
 <header>
     <h2><i class="bi bi-file-earmark-person-fill"></i>&nbsp;CareerQuest</h2>
-    <nav class="nav-links">
+    <button type="button" class="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="end-nav">
+    <nav class="nav-links" id="primaryNav">
         <a href="{% url 'dashboard' %}">Home</a>
-        <a href="{% url 'dashboard' %}#reports">Reports</a>
         <a href="{% url 'profile' %}">Profile</a>
     </nav>
     <button type="button" class="logoutBtn" data-bs-toggle="modal" data-bs-target="#logoutModal">
-        <i class="bi bi-box-arrow-right"></i>
+        Logout
     </button>
+    </div>
 </header>
+<!-- Menu (Mobile View)-->
+<div id="mobile-menu">
+    <nav id="mobile-nav">
+        <a href="">Home</a>
+        <a href="">Profile</a>
+    <button type="button" class="logoutBtnMobile" data-bs-toggle="modal" data-bs-target="#logoutModal">
+        Logout
+    </button>
+    </nav>
+</div>

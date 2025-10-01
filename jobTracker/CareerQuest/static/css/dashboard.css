@@ -22,12 +22,19 @@ header {
   padding-left: 0.5rem;
   padding-right: 1rem;
   width: 100%;
+  position: relative;
 }
 
 .nav-links a {
   text-decoration: none;
   color: white;
   transition: 0.2s ease;
+}
+
+.end-nav {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
 }
 
 .nav-links a:hover{
@@ -37,7 +44,7 @@ header {
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .table-container {
@@ -46,6 +53,10 @@ header {
   margin: 2rem auto;
   max-width: 100%;
   width: 100%;
+}
+
+#mobile-menu {
+  display: none;
 }
 
 .table-head {
@@ -73,6 +84,7 @@ header {
 .alert {
   margin-top: 1rem;
 }
+
 .table-head #addBtn {
   font-size: small;
   padding: 0.5rem 1rem;
@@ -87,7 +99,6 @@ header {
 
 .table {
   text-align: center;
-  border-radius: 20px;
 }
 
 .table tr td {
@@ -226,8 +237,30 @@ h2 {
   main {
     padding: 2rem 2rem;
   }
-  nav {
+  .nav-links {
     display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgb(0, 26, 139);
+    flex-direction: column;
+    gap: 0;
+    width: 70vw;
+    max-width: 280px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    border-bottom-left-radius: 8px;
+    z-index: 1000;
+  }
+
+  .nav-links a {
+    padding: 0.75rem 1rem;
+    display: block;
+  }
+
+  #mobile-menu.open {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .card-container {
@@ -277,46 +310,90 @@ h2 {
   }
 }
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
+
+  .end-nav {
+    display: none;
+  }
+  /* Ensure mobile menu works on tablets too */
+  .nav-links {
+    display: none;
+  }
+
+  #mobile-menu.open {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(206, 206, 206, 0.884);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .logoutBtn {
+    display: none;
+  }
+  
+  #mobile-nav{
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .logoutBtnMobile {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
+  }
+
+  #mobile-nav a {
+    text-align: center;
+    text-decoration: none;
+    margin-top: 1rem;
+    color: black;
+  }
+
+  .menuBtn{
+    display: block;
+    background: none;
+    color: white;
+    border: none;
+   }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
   .dash-card-container {
+    padding: 1rem 0;
+    gap: 0.75rem;
+    width: 100%;
     flex-direction: column;
   }
 
   .link-cards, .application-sent-cards, .job-offers-cards {
     max-width: none;
   }
-}
-
-@media (max-width: 950px) {
-
-  .dash-card-container {
-    padding: 1rem 0;
-    gap: 0.75rem;
-  }
 
   table {
     display: none;
   }
-
   main {
     padding: 0 1rem;
   }
-
   .mobileBtnGrp {
     display: flex;
     gap: 5px !important;
   }
-
   .mobileBtnGrp button {
     font-size: small;
   }
-
   .card-title.mobileHeading {
     font-size: medium;
     font-weight: bold;
     margin-bottom: 0%;
   }
-
   .card-container {
     display: block;
     padding: 1rem;
@@ -324,15 +401,12 @@ h2 {
     max-height: 300px;
     height: 100%;
   }
-
   .card.mb-3{
     display: block;
   }
-
   .statusDot{
     display: flex !important;
   }
-
   .user-greeting {
     padding: 2rem 1rem; 
     margin-bottom: 0;
