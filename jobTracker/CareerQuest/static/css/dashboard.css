@@ -389,6 +389,7 @@ h2 {
   .mobileBtnGrp button {
     font-size: small;
   }
+
   .card-title.mobileHeading {
     font-size: medium;
     font-weight: bold;
@@ -432,6 +433,9 @@ h2 {
    align-items: center;
   }
 
+  .dash-card-container {
+    gap: 1rem;
+  }
   .card-container {
     display: block;
     padding: 1rem;
