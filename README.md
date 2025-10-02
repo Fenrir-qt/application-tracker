@@ -1,2 +1,2 @@
-# Django Practice Project
+# Application Tracker
 
