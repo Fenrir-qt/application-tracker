@@ -47,6 +47,16 @@ header {
   gap: 1rem;
 }
 
+.table-header-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-application.form-control {
+  width: auto !important;
+  max-width: none;
+}
+
 .table-container {
   display: flex;
   flex-direction: column;
@@ -411,6 +421,18 @@ h2 {
   .user-greeting {
     padding: 2rem 1rem; 
     margin-bottom: 0;
+  }
+
+  .table-head {
+    gap: 0.75rem;
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .table-header-buttons {
+    gap: 0.5rem;
+    flex-direction: column;
+    width: 100%;
   }
 }
 

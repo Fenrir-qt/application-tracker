@@ -92,7 +92,11 @@
         <div class="table-container">
             <div class="table-head">
                <h4>Applications</h4>
-               <button class="btn btn-primary" id="addBtn" data-bs-toggle="modal" data-bs-target="#addApplicationModal">+ Add Application</button> 
+               <div class="table-header-buttons">
+                <input type="search" name="search-application" id="search-application" placeholder="Search" class="search-application form-control">
+                <button class="btn btn-primary" id="addBtn" data-bs-toggle="modal" data-bs-target="#addApplicationModal">+ Add Application</button> 
+               </div>
+               
             </div>
             
             <table class="table table-responsive table-reflow rounded overflow-hidden">
@@ -150,7 +154,7 @@
         
 
         <!-- Add Application Modal -->
-        <form action="{% url 'add_application' %}" method="post">
+        <form action="{% url 'add_application' %}" method="post" >
         {% csrf_token %}
         <div class="modal fade" id="addApplicationModal" tabindex="-1" role="dialog" aria-labelledby="addApplicationModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -167,7 +171,7 @@
                         {{ form.job_desc }}
                         <label for="status" class="mb-1 mt-3">Status:</label>
                         {{ form.status }}
-                        <label for="" class="mb-1 mt-3">Date Applied:</label>
+                        <label for="dateApplied" class="mb-1 mt-3">Date Applied:</label>
                         {{ form.application_date }}
                     </div>
                     <div class="modal-footer">
