@@ -115,7 +115,7 @@ class addApplicationForm(forms.ModelForm):
         self.fields['status'].widget = forms.Select(choices=[('', '--- Select Status ---'), ('Accepted', 'Accepted'),  ('No Response', 'No Response'), ('Offered', 'Offered'), ('Pending', 'Pending'),('Rejected', 'Rejected')])
         self.fields['status'].widget.attrs.update({ 'class': 'form-select' })
         self.fields['application_date'].widget = forms.DateInput(attrs={'type': 'date'})
-        self.fields['application_date'].widget.attrs.update({ 'class': 'form-control' })
+        self.fields['application_date'].widget.attrs.update({ 'class': 'form-control', 'id': 'dateApplied' })
 
 
 class editApplicationForm(forms.ModelForm):
@@ -126,10 +126,10 @@ class editApplicationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(editApplicationForm, self).__init__(*args, **kwargs)
 
-        self.fields['company'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Name of Company'})
-        self.fields['job_name'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Position/Title'})
-        self.fields['job_desc'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Job Description'})
+        self.fields['company'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Name of Company', 'id': 'company'})
+        self.fields['job_name'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Position/Title', 'id': 'jobName'})
+        self.fields['job_desc'].widget.attrs.update({ 'class': 'form-control', 'placeholder': 'Job Description', 'id': 'jobDesc'})
         self.fields['status'].widget = forms.Select(choices=[('', '--- Select Status ---'), ('Accepted', 'Accepted'),  ('No Response', 'No Response'), ('Offered', 'Offered'), ('Pending', 'Pending'),('Rejected', 'Rejected')])
-        self.fields['status'].widget.attrs.update({ 'class': 'form-select' })
+        self.fields['status'].widget.attrs.update({ 'class': 'form-select', 'id': 'status' })
         self.fields['application_date'].widget = forms.DateInput(attrs={'type': 'date'})
-        self.fields['application_date'].widget.attrs.update({ 'class': 'form-control' })
+        self.fields['application_date'].widget.attrs.update({ 'class': 'form-control', 'id': 'dateApplied' })
