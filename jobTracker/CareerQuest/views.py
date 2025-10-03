@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as authorize, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib import messages
 from django.db.models import Count, Q
 from .forms import SignUpForm, LoginForm, addApplicationForm, editApplicationForm
@@ -35,15 +35,17 @@ def login(request):
 
 from django.db.models import Count, Q
 
+from django.core.paginator import Paginator
+
 @login_required(login_url='/')
 def home(request):
     if request.user.is_superuser:
         return HttpResponseForbidden("Admins cannot access this page.")
     
-    # Single query with aggregation
-    jobs = JobApplications.objects.filter(user=request.user).order_by('-application_date')
+    all_jobs = JobApplications.objects.filter(user=request.user)
     
-    stats = jobs.aggregate(
+    # Calculate stats on all jobs
+    stats = all_jobs.aggregate(
         total_jobs=Count('id'),
         total_offers=Count('id', filter=Q(status='Offered')),
         total_pending=Count('id', filter=Q(status='Pending')),
@@ -51,6 +53,14 @@ def home(request):
         total_accepted=Count('id', filter=Q(status='Accepted')),
         total_rejected=Count('id', filter=Q(status='Rejected')),
     )
+    
+    # Order jobs for pagination
+    jobs_ordered = all_jobs.order_by('-application_date')
+    
+    # Paginate with 5 items per page
+    paginator = Paginator(jobs_ordered, 5)
+    page_number = request.GET.get('page', 1)
+    jobs = paginator.get_page(page_number)
     
     form = addApplicationForm()
     
@@ -84,7 +94,42 @@ def add_application(request):
             messages.error(request, 'Error inserting job application.')
 
     return redirect('/dashboard')
-    
+
+def search_application(request):
+    query = request.GET.get('q', '')
+    results = []
+
+    if query:
+        jobs = (
+            JobApplications.objects
+            .filter(user=request.user)
+            .filter(
+                Q(company__icontains=query) |
+                Q(job_name__icontains=query) |
+                Q(job_desc__icontains=query) |
+                Q(status__icontains=query)
+            )
+            .order_by('-application_date')[:5]
+        )
+    else:
+        # When no query, return the latest items similar to dashboard default
+        jobs = (
+            JobApplications.objects
+            .filter(user=request.user)
+            .order_by('-application_date')[:5]
+        )
+
+    results = list(jobs.values(
+        'id',
+        'job_name',
+        'job_desc',
+        'company',
+        'status',
+        'application_date'
+    ))
+
+    return JsonResponse({'results': results})
+
 @login_required(login_url='/')
 def edit_application(request, id):
     job = get_object_or_404(JobApplications, pk=id, user=request.user)
