@@ -79,7 +79,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">Pending <span class="badge bg-primary rounded-pill">{{ total_pending|default:0 }}</span></li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">Accepted <span class="badge bg-success rounded-pill">{{ total_accepted|default:0 }}</span></li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">No Response <span class="badge bg-secondary rounded-pill">{{ total_noresponse|default:0 }}</span></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">Offer <span class="badge bg-warning text-dark rounded-pill">{{ total_offers|default:0 }}</span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">Offered <span class="badge bg-warning text-dark rounded-pill">{{ total_offers|default:0 }}</span></li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">Rejected <span class="badge bg-danger rounded-pill">{{ total_rejected|default:0 }}</span></li>
                             </ul>
                         </div>
@@ -291,7 +291,7 @@
             new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Pending','Accepted','Offer','Rejected', 'No Response'],
+                    labels: ['Pending','Accepted','Offered','Rejected', 'No Response'],
                     datasets: [{ data: dataArr, backgroundColor: ['#0d6efd','#198754','#fd7e14','#dc3545', '#757575ff'] }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
