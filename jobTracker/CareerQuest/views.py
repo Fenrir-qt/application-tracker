@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login as authorize, logout
+from django.contrib.auth import login as authorize, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
@@ -117,25 +117,52 @@ def logout_view(request):
 
 @login_required(login_url='/')
 def profile(request):
+    show_password_form = False
+    
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        changed = False
-        if first_name is not None and first_name != request.user.first_name:
-            request.user.first_name = first_name
-            changed = True
-        if last_name is not None and last_name != request.user.last_name:
-            request.user.last_name = last_name
-            changed = True
-        if email is not None and email != request.user.email:
-            request.user.email = email
-            changed = True
-        if changed:
+        form_type = request.POST.get('form_type')
+        
+        if form_type == 'password':
+            show_password_form = True
+            old_password = request.POST.get('old_password')
+            new_password1 = request.POST.get('new_password1')
+            new_password2 = request.POST.get('new_password2')
+
+            if not old_password or not request.user.check_password(old_password):
+                messages.error(request, "Current password is incorrect.")
+                return render(request, 'profile/profile.html', {'show_password_form': show_password_form})
+            
+            if new_password1 != new_password2:
+                messages.error(request, "New passwords don't match!")
+                return render(request, 'profile/profile.html', {'show_password_form': show_password_form})
+            
+            request.user.set_password(new_password1)
             request.user.save()
-            messages.success(request, 'Profile updated successfully.')
-        else:
-            messages.info(request, 'No changes were made.')
-        return redirect('profile')
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Password updated.')
+            return redirect('profile')
+        
+        elif form_type == 'profile':
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            changed = False
+            
+            if first_name is not None and first_name != request.user.first_name:
+                request.user.first_name = first_name
+                changed = True
+            if last_name is not None and last_name != request.user.last_name:
+                request.user.last_name = last_name
+                changed = True
+            if email is not None and email != request.user.email:
+                request.user.email = email
+                changed = True
+            
+            if changed:
+                request.user.save()
+                messages.success(request, 'Profile updated successfully.')
+            else:
+                messages.info(request, 'No changes were made.')
+            return redirect('profile')
     
     return render(request, 'profile/profile.html')

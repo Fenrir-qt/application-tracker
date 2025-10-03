@@ -17,6 +17,7 @@
       {% endfor %}
     {% endif %}
 
+    {% include 'includes/logout.html' %}
     <div class="row g-4">
       <div class="col-12 col-lg-4">
         <div class="card h-100">
@@ -52,6 +53,7 @@
             {% if form %}
             <form method="post" novalidate>
               {% csrf_token %}
+              <input type="hidden" name="form_type" value="profile">
               <div class="row g-3">
                 <div class="col-12 col-md-6">
                   <label class="form-label">First name</label>
@@ -73,6 +75,7 @@
             {% else %}
             <form method="post" novalidate>
               {% csrf_token %}
+              <input type="hidden" name="form_type" value="profile">
               <div class="row g-3">
                 <div class="col-12 col-md-6">
                   <label for="first_name" class="form-label">First name</label>
@@ -93,11 +96,12 @@
             </form>
             {% endif %}
 
-            <div class="collapse mt-4" id="passwordCollapse">
+            <div class="collapse mt-4{% if show_password_form %} show{% endif %}" id="passwordCollapse">
               <div class="border rounded p-3 bg-light-subtle">
                 <h6 class="mb-3">Change Password</h6>
-                <form method="post" action="">
+                <form method="post">
                   {% csrf_token %}
+                  <input type="hidden" name="form_type" value="password">
                   <div class="row g-3">
                     <div class="col-12 col-md-6">
                       <label for="old_password" class="form-label">Current password</label>
