@@ -25,7 +25,7 @@
             <label for="password" class="mb-1 mt-3">{{ form.password.label }} </label>
             {{ form.password }}
             <span id="passwordErr">Please enter your password!</span>
-            <a href="#" class="mb-3 mt-2" id="forgotPass">Forgot Password?</a>
+            <a href="{% url 'forgot_password' %}" class="mb-3 mt-2" id="forgotPass">Forgot Password?</a>
             
             <button type="submit" class="btn btn-primary">Login</button>
         </form>

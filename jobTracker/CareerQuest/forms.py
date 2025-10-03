@@ -133,3 +133,34 @@ class editApplicationForm(forms.ModelForm):
         self.fields['status'].widget.attrs.update({ 'class': 'form-select', 'id': 'status' })
         self.fields['application_date'].widget = forms.DateInput(attrs={'type': 'date'})
         self.fields['application_date'].widget.attrs.update({ 'class': 'form-control', 'id': 'dateApplied' })
+
+
+class ForgotPasswordRequestForm(forms.Form):
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your account email', 'class': 'form-control', 'id': 'email'})
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        # Do not reveal if email exists for privacy; but validate format only
+        return email
+
+
+class ResetPasswordForm(forms.Form):
+    new_password1 = forms.CharField(
+        label='New Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'New password', 'class': 'form-control', 'id': 'new_password1'})
+    )
+    new_password2 = forms.CharField(
+        label='Confirm New Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm new password', 'class': 'form-control', 'id': 'new_password2'})
+    )
+
+    def clean(self):
+        cleaned = super().clean()
+        p1 = cleaned.get('new_password1')
+        p2 = cleaned.get('new_password2')
+        if p1 and p2 and p1 != p2:
+            raise forms.ValidationError("New passwords don't match!")
+        return cleaned

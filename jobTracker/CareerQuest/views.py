@@ -4,8 +4,18 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.contrib import messages
 from django.db.models import Count, Q
-from .forms import SignUpForm, LoginForm, addApplicationForm, editApplicationForm
+from .forms import SignUpForm, LoginForm, addApplicationForm, editApplicationForm, ForgotPasswordRequestForm, ResetPasswordForm
 from .models import JobApplications
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import send_mail
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 def register(request):
     if request.method == 'POST':
@@ -211,3 +221,66 @@ def profile(request):
             return redirect('profile')
     
     return render(request, 'profile/profile.html')
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        form = ForgotPasswordRequestForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            # Find users with this email. Do not reveal existence in UI.
+            users = User.objects.filter(email__iexact=email)
+            for user in users:
+                token_generator = PasswordResetTokenGenerator()
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                token = token_generator.make_token(user)
+                reset_url = request.build_absolute_uri(
+                    reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+                )
+                subject = 'Reset your CareerQuest password'
+                message = render(request, 'auth/password_reset_email.txt', {
+                    'user': user,
+                    'reset_url': reset_url,
+                }).content.decode('utf-8')
+                try:
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    logger.exception("Password reset email failed to send: %s", e)
+                    
+            messages.success(request, 'If an account with that email exists, a reset link has been sent.')
+            return redirect('login')
+    else:
+        form = ForgotPasswordRequestForm()
+    return render(request, 'auth/forgot_password.html', {'form': form})
+
+
+def reset_password_confirm(request, uidb64, token):
+    token_generator = PasswordResetTokenGenerator()
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except Exception:
+        user = None
+
+    if user is None or not token_generator.check_token(user, token):
+        messages.error(request, 'The reset link is invalid or has expired.')
+        return redirect('login')
+
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password1']
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'Your password has been reset. You can now log in.')
+            return redirect('login')
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, 'auth/reset_password_confirm.html', {'form': form})
